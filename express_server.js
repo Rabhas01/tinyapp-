@@ -10,9 +10,17 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+//route for urls
 app.get("/urls",(req, res) => {
+  // const templateVars = { urls: urlDatabase }
   const templateVars = { urls: urlDatabase }
   res.render("urls_index", templateVars)
+})
+
+//route to render short url template
+app.get("/urls/:shortURL",(req, res) => {
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[`${req.params.shortURL}`] }
+  res.render("urls_show", templateVars)
 })
 
 app.get("/", (req, res) => {
