@@ -75,3 +75,10 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);         // Respond with 'redirect to the new page with shorturl created ' (we will replace this)
   
 });
+
+app.post("/urls/:shortUrl/delete", (req, res) => {
+  const DeleteURL = req.params.shortURL;
+  delete urlDatabase[DeleteURL];
+res.redirect("/urls");
+
+})
