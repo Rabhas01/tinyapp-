@@ -9,6 +9,18 @@ const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+app.post("/urls", (req, res) => {
+  console.log(req.body);  // Log the POST request body to the console
+  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+});
+
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
+
+//get route to render urls_new template
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+})
 
 //route for urls
 app.get("/urls",(req, res) => {
@@ -23,6 +35,16 @@ app.get("/urls/:shortURL",(req, res) => {
   res.render("urls_show", templateVars)
 })
 
+function generateRandomString() {
+  let result = '';
+  let characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' 
+  for (let i = 0; i < 5 ; i++ ){
+  result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
+generateRandomString()
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
