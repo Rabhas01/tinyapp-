@@ -13,11 +13,6 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-// const templateVars = {
-//   username: req.cookies["username"],
-//   // ... any other vars
-// };
-// res.render("urls_index", templateVars);
 
 
 const bodyParser = require("body-parser");
@@ -38,6 +33,7 @@ function generateRandomString() {
   }
   return result;
 }
+generateRandomString()
 
 //Login Route
 app.post("/login", (req, res) =>{
@@ -46,23 +42,30 @@ app.post("/login", (req, res) =>{
   res.redirect('/urls');
 })
 
+//logout Route
+app.post("/logout", (req, res) =>{
+  const username = req.body.username
+  res.clearCookie("username")
+  res.redirect('/urls');
+})
 
+app.post
 //route for urls
 app.get("/urls",(req, res) => {
   // const templateVars = { urls: urlDatabase }
-  const templateVars = { urls: urlDatabase }
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] }
   res.render("urls_index", templateVars)
 })
 
 //route to render short url template
 app.get("/urls/:shortURL",(req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[`${req.params.shortURL}`] }
+  const templateVars = { username: req.cookies["username"], shortURL: req.params.shortURL, longURL: urlDatabase[`${req.params.shortURL}`] }
   res.render("urls_show", templateVars)
 })
 
-generateRandomString()
+
 app.get("/", (req, res) => {
-  res.send('/urls');
+  res.render('/urls_index');
 });
 
 app.get("/urls.json", (req, res) => {
