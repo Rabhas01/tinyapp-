@@ -5,13 +5,20 @@ const PORT = 8080; // default port 8080
 
 //set ejs as the view engine
 app.set("view engine", "ejs");
+app.use(cookieParser())
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-app.use(cookieParser())
+// const templateVars = {
+//   username: req.cookies["username"],
+//   // ... any other vars
+// };
+// res.render("urls_index", templateVars);
+
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -19,9 +26,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 //get route to render urls_new template
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
+  res.render("urls_new",)
 })
 
-
+//Random string generator
 function generateRandomString() {
   let result = '';
   let characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' 
@@ -30,6 +38,14 @@ function generateRandomString() {
   }
   return result;
 }
+
+//Login Route
+app.post("/login", (req, res) =>{
+  const username = req.body.username
+  res.cookie("username", username)
+  res.redirect('/urls');
+})
+
 
 //route for urls
 app.get("/urls",(req, res) => {
@@ -46,7 +62,7 @@ app.get("/urls/:shortURL",(req, res) => {
 
 generateRandomString()
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.send('/urls');
 });
 
 app.get("/urls.json", (req, res) => {
