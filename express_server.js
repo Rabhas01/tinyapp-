@@ -13,15 +13,14 @@ const urlDatabase = {
   '9sm5xK': 'http://www.google.com'
 };
 
-ail: 'spiderman@avengers.com'
 const users = { 
   'SpiderMan': {
-    id: 'Spid', 
+    id: 'SpiderMan', 
     email: 'spiderman@avengers.com', 
     password: 'Iloveironman'
   },
  'Thanos': {
-    id: 'Than', 
+    id: 'Thanos', 
     email: 'mustdestroy@infinity_stones.com', 
     password: 'avengersucks'
   }
@@ -58,14 +57,22 @@ function userAlreadyExists (email)  {
 
 //Login Route
 app.post('/login', (req, res) =>{
-  const user = userAlreadyExists(req.body.username.toLowerCase())
+  let user = userAlreadyExists(req.body.username)
+  user = user
   if (user && user[id]) {
-    res.cookie('user_id', user[id]);
-    res.redirect('/urls');  
+    res.cookie('user_id', user.id);
+    res.redirect('/urls'); 
   }
-
-res.send('User not found');
+  
+  res.sendStatus(403);
 });
+
+//
+app.get('/login', (req, res) => {
+  const user = users[req.cookies["user_id"]];
+  const templateVars = { urls: urlDatabase, user: user };
+  res.render('urls_login', templateVars)
+})
 
 //logout Route
 app.post('/logout', (req, res) =>{
@@ -105,7 +112,8 @@ app.get('/register', (req, res) => {
 
 //endpoint registration from data
 app.post('/register', (req, res) => {
-  const submitEmail = req.body.email.toLowerCase();
+  const submitEmail = req.body.email;
+  // const submitEmail = req.body.email.toLowerCase();
   const submitPassword = req.body.password;
   
   if (!submitEmail && !submitPassword){
@@ -119,8 +127,8 @@ app.post('/register', (req, res) => {
   const newUserID = generateRandomString();
   users[newUserID] = {
     id: newUserID,
-    email:submitEmail,
-    password:submitPassword
+    email: submitEmail,
+    password: submitPassword
   };
    
   res.cookie('user_id', newUserID)
