@@ -13,7 +13,7 @@ const urlDatabase = {
   '9sm5xK': 'http://www.google.com'
 };
 
-
+ail: 'spiderman@avengers.com'
 const users = { 
   'SpiderMan': {
     id: 'Spid', 
@@ -58,9 +58,9 @@ function userAlreadyExists (email)  {
 
 //Login Route
 app.post('/login', (req, res) =>{
-  const user = userAlreadyExists(req.body.username)
+  const user = userAlreadyExists(req.body.username.toLowerCase())
   if (user && user[id]) {
-    res.cookie('user_id', user.id);
+    res.cookie('user_id', user[id]);
     res.redirect('/urls');  
   }
 
@@ -69,7 +69,6 @@ res.send('User not found');
 
 //logout Route
 app.post('/logout', (req, res) =>{
-  const username = req.body.username
   res.clearCookie('user_id')
   res.redirect('/urls');
 })
@@ -106,7 +105,7 @@ app.get('/register', (req, res) => {
 
 //endpoint registration from data
 app.post('/register', (req, res) => {
-  const submitEmail = req.body.email;
+  const submitEmail = req.body.email.toLowerCase();
   const submitPassword = req.body.password;
   
   if (!submitEmail && !submitPassword){
