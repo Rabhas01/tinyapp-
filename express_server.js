@@ -48,16 +48,6 @@ function generateRandomString() {
 }
 generateRandomString()
 
-//check if user already exist
-function userAlreadyExists(email, userDatabase)  {
-  for (let user in userDatabase) {
-    if (userDatabase[user].email === email){
-      return true;
-    } 
-  }
-  return false; 
-}
-
 //check urls specefic to the userid
 function urlsForUser(id, urlDatabase) {
   const res = {};
@@ -70,6 +60,17 @@ function urlsForUser(id, urlDatabase) {
   return res;
 }
 
+function getUserByEmail (email, users) {
+  for (const userId in users) {
+      const user = users[userId];
+      if (user.email == email) {
+          return user;
+      }
+  }
+  return null;
+}
+
+module.exports = { getUserByEmail };
 
 app.get('/register', (req, res) => {
   const user = users[req.session["user_id"]];
@@ -78,6 +79,7 @@ app.get('/register', (req, res) => {
 
 //registration route from data
 app.post('/register', (req, res) => {
+  
   const submitEmail = req.body.email;
   const submitPassword = req.body.password;
   
@@ -86,7 +88,7 @@ app.post('/register', (req, res) => {
     return;
   };
 
-  if (userAlreadyExists(submitEmail)){
+  if (getUserByEmail(submitEmail)){
     res.send(400, "Account already exists")
     return;
   };
@@ -108,13 +110,14 @@ app.post('/register', (req, res) => {
 //Login Route
 app.post('/login', (req, res) =>{
  
+
   const email = req.body.email;
   const password = req.body.password;
 
-  if (!userAlreadyExists(email)) {
+  if (!getUserByEmail(email)) {
     res.send(403);
   } else {
-    const userID = userAlreadyExists(email);
+    const userID = getUserByEmail(email);
       if (!bcrypt.hashSync(password, 10, users[userID].password)) {
       res.send(403, "Incorrect password! please try again ");
     } else {
