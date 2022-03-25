@@ -137,9 +137,10 @@ app.post('/register', (req, res) => {
 app.get('/urls',(req, res) => {
   const user = users[req.cookies["user_id"]];
   if (!user) {
-    res.redirect('/login');
+    res.status(400).send('Please login to access')
     return;
-  }
+  }0
+
   const userUrl = urlsForUser(user.id, urlDatabase);
   const templateVars = { urls: userUrl, user: user };
   res.render('urls_index', templateVars)
@@ -149,10 +150,21 @@ app.post('/urls', (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   const shortURL = generateRandomString();
   const user = users[req.cookies["user_id"]];
-  urlDatabase[shortURL] = { longURL: req.params.longURL, userID: user.id };
+  urlDatabase[shortURL] = { longURL: req.body.longURL, userID: user.id };
   res.redirect("/urls/" + shortURL);  
 });
-  
+
+//get route to render urls_new template
+app.get('/urls/new', (req, res) => {
+  const user = users[req.cookies['user_id']]
+  if (!user) {
+    res.status(400).send('Please login to access')
+    } else {
+  res.render('urls_new', { user: user })
+  };
+})
+
+
 //route to render short url template
 app.get('/urls/:shortURL',(req, res) => {
   const user = users[req.cookies["user_id"]];
@@ -197,20 +209,6 @@ app.get('/u/:shortURL', (req, res) => {
    const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
-
-
-
-//get route to render urls_new template
-app.get('/urls/new', (req, res) => {
-  const user = users[req.cookies['user_id']]
-  if (!user) {
-    res.redirect("/login");
-  } else {
-  res.render('urls_new', { user: user })
-  };
-})
-
-
 
 
 app.post('/urls/:shortURL/delete', (req, res) => {
