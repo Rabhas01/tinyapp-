@@ -16,7 +16,7 @@ app.use(cookieSession({
 
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "SpiderMan"},
-  "9sm5xK": { longURL: "http://www.google.com", userID: "SpiderMan"}
+  "9sm5xK": { longURL: "http://www.google.com", userID: "TestUser"}
 };
 
 const users = { 
@@ -25,10 +25,10 @@ const users = {
     email: 'spiderman@avengers.com', 
     password: 'Iloveironman'
   },
- 'Thanos': {
-    id: 'Thanos', 
-    email: 'mustdestroy@infinity_stones.com', 
-    password: 'avengersucks'
+ 'TestUser': {
+    id: 'TestUser', 
+    email: 'TestUser@learn2code.com', 
+    password: 'camelCase'
   }
 }
 
