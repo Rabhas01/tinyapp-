@@ -3,6 +3,8 @@ const cookieSession = require('cookie-session')
 const express = require('express');
 const app = express();
 const PORT = 8080; // default port 8080
+const { getUserByEmail } = require('./helper');
+
 
 //set ejs as the view engine
 app.set('view engine', 'ejs');
@@ -59,18 +61,6 @@ function urlsForUser(id, urlDatabase) {
 
   return res;
 }
-
-function getUserByEmail (email, users) {
-  for (const userId in users) {
-      const user = users[userId];
-      if (user.email == email) {
-          return user;
-      }
-  }
-  return null;
-}
-
-module.exports = { getUserByEmail };
 
 app.get('/register', (req, res) => {
   const user = users[req.session["user_id"]];
