@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const PORT = 8080; // default port 8080
 const { getUserByEmail } = require('./helper');
-
+const { generateRandomString } = require('./helper')
 
 //set ejs as the view engine
 app.set('view engine', 'ejs');
@@ -32,23 +32,8 @@ const users = {
   }
 }
 
-
-
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
-
-
-
-//Random string generator
-function generateRandomString() {
-  let result = '';
-  let characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' 
-  for (let i = 0; i < 6 ; i++ ){
-  result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-}
-generateRandomString()
 
 //check urls specefic to the userid
 function urlsForUser(id, urlDatabase) {
