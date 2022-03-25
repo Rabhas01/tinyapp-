@@ -29,7 +29,7 @@ Useful, fast, reliable was to shorten urls of long named websites which are no l
 - Run the development web server using the `node express_server.js` command.
 
 
-## How its working
+## Its working
 
 - Register with an email and password.
 - After registering login with your registered email address and password

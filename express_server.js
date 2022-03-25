@@ -13,7 +13,6 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }))
 
-
 const urlDatabase = {
   "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "SpiderMan"},
   "9sm5xK": { longURL: "http://www.google.com", userID: "TestUser"}
@@ -54,7 +53,7 @@ app.get('/register', (req, res) => {
 
 //registration route from data
 app.post('/register', (req, res) => {
-  
+    
   const submitEmail = req.body.email;
   const submitPassword = req.body.password;
   
@@ -81,33 +80,31 @@ app.post('/register', (req, res) => {
   console.log(users);
 });
 
-
-//Login Route
-app.post('/login', (req, res) =>{
- 
-
-  const email = req.body.email;
-  const password = req.body.password;
-
-  if (!getUserByEmail(email)) {
-    res.send(403);
-  } else {
-    const userID = getUserByEmail(email);
-      if (!bcrypt.hashSync(password, 10, users[userID].password)) {
-      res.send(403, "Incorrect password! please try again ");
-    } else {
-      req.session['user_id'] = userID;
-      res.redirect("/urls");
-    }
-  }
-})
-
-//
 app.get('/login', (req, res) => {
   const user = users[req.session["user_id"]];
   const templateVars = { urls: urlDatabase, user: user };
   res.render('urls_login', templateVars)
 })
+
+//Login Route
+app.post('/login', (req, res) =>{
+ 
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!getUserByEmail(email, users)) {
+    res.status(403).send("There is no account associated with this email address");
+  } else {
+    const userID = getUserByEmail(email, users);
+      if (!bcrypt.hashSync(password,10, users[userID].password)) {
+      res.send(403, "Incorrect password! please try again ");
+    } else {
+      req.session.user_id = userID;
+      res.redirect("/urls");
+    }
+  }
+})
+
 
 //logout Route
 app.post('/logout', (req, res) =>{
@@ -169,12 +166,12 @@ app.post('/urls/:shortURL', (req, res) => {
   }
 
   urlDatabase[req.params.shortURL].longURL = req.body.newUrl;
-  res.redirect('/urls');        
+  res.redirect('/register');        
 
 })
 
 app.get('/', (req, res) => {
-  res.send('Welcome');
+  res.redirect('/urls');
 });
 
 
