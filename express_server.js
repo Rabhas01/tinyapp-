@@ -49,14 +49,13 @@ function generateRandomString() {
 generateRandomString()
 
 //check if user already exist
-function userAlreadyExists(email)  {
-  for (let userID in users) {
-    let user = users[userID]
-    if (user.email == email){
-      return user.id;
+function userAlreadyExists(email, userDatabase)  {
+  for (let user in userDatabase) {
+    if (userDatabase[user].email === email){
+      return true;
     } 
   }
-  return null; 
+  return false; 
 }
 
 //check urls specefic to the userid
@@ -70,6 +69,7 @@ function urlsForUser(id, urlDatabase) {
 
   return res;
 }
+
 
 app.get('/register', (req, res) => {
   const user = users[req.session["user_id"]];
