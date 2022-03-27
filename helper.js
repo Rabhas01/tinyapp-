@@ -15,7 +15,18 @@ function generateRandomString() {
   }
   return result;
 }
-generateRandomString()
+
+//check urls specefic to the userid
+function urlsForUser(id, urlDatabase) {
+  const res = {};
+  for (let urlId in urlDatabase) {
+      if (urlDatabase[urlId].userID === id) {
+          res[urlId] = urlDatabase[urlId];
+      }
+  }
+
+  return res;
+}
 
 
-module.exports = { getUserByEmail, generateRandomString };
+module.exports = { getUserByEmail, generateRandomString, urlsForUser };
