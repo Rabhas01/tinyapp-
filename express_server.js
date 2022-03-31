@@ -29,6 +29,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 // To render the registration page
 app.get('/register', (req, res) => {
   const user = users[req.session["user_id"]];
+  if (user){
+    res.redirect('/urls')
+  }
   res.render('urls_registration', { user: user });
 });
 
@@ -59,6 +62,9 @@ app.post('/register', (req, res) => {
 // To render the login page
 app.get('/login', (req, res) => {
   const user = users[req.session["user_id"]];
+  if (user){
+    res.redirect('/urls')
+  }
   const templateVars = { urls: urlDatabase, user: user };
   res.render('urls_login', templateVars);
 });
