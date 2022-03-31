@@ -157,6 +157,10 @@ app.post('/urls/:shortURL', (req, res) => {
 
 
 app.get('/u/:shortURL', (req, res) => {
+  if (!urlDatabase[req.params.shortURL]) {
+    res.status(400).send('This short url does not exist');
+    return;
+  }
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
