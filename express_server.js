@@ -101,9 +101,11 @@ app.get('/urls',(req, res) => {
   
 
 app.post('/urls', (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  const shortURL = generateRandomString();
   const user = users[req.session["user_id"]];
+  if (!user) {
+    res.redirect('/login');
+  }
+  const shortURL = generateRandomString();
   urlDatabase[shortURL] = { longURL: req.body.longURL, userID: user.id };
   res.redirect("/urls/" + shortURL);
 });
@@ -152,7 +154,7 @@ app.post('/urls/:shortURL', (req, res) => {
   }
 
   urlDatabase[req.params.shortURL].longURL = req.body.newUrl;
-  res.redirect('/register');
+  res.redirect('/urls');
 });
 
 
