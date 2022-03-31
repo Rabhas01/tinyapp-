@@ -1,11 +1,9 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); 
 const cookieSession = require('cookie-session');
 const express = require('express');
 const app = express();
 const PORT = 8080; // default port 8080
 const { getUserByEmail, generateRandomString, urlsForUser } = require('./helper');
-
-
 
 // Set ejs as the view engine
 app.set('view engine', 'ejs');
@@ -14,12 +12,14 @@ app.use(cookieSession({
   keys: ['key1']
 }));
 
+
 const urlDatabase = {
-  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "SpiderMan"},
-  "9sm5xK": { longURL: "http://www.google.com", userID: "TestUser"}
+  "b2xVn2": { longURL: "http://www.lighthouselabs.ca", userID: "RANDOM ID"},
+  "9sm5xK": { longURL: "http://www.google.com", userID: "RANDOM ID"}
 };
 
 const users = {};
+
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -157,9 +157,13 @@ app.post('/urls/:shortURL', (req, res) => {
   if (!user) {
     res.redirect('/login');
   }
-
-  urlDatabase[req.params.shortURL].longURL = req.body.newUrl;
-  res.redirect('/urls');
+  const url = urlDatabase[req.params.shortURL];
+  if (url.userID === user.id){
+    urlDatabase[req.params.shortURL].longURL = req.body.newUrl;
+    res.redirect('/urls');
+  } else {
+    res.status(400).send("You do not have permission to edit this URL");
+  }
 });
 
 
@@ -172,7 +176,7 @@ app.get('/u/:shortURL', (req, res) => {
   res.redirect(longURL);
 });
 
-
+// Render to homepage
 app.get('/', (req, res) => {
   if (!req.session["user_id"]){
     res.redirect('/login');
@@ -180,10 +184,6 @@ app.get('/', (req, res) => {
   res.redirect('/urls');
 });
 
-
-app.get('/hello', (req, res) => {
-  res.send('<html><body>Hello <b>World</b></body></html>\n');
-});
 
 // To delete a shortUrl by Id
 app.post('/urls/:shortURL/delete', (req, res) => {

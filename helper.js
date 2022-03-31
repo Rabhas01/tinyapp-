@@ -1,3 +1,4 @@
+//Retrives the user by their email
 const getUserByEmail = function(email, database) {      
   for (let id in database) {
     if (database[id]["email"] === email) {
