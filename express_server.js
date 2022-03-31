@@ -3,9 +3,8 @@ const cookieSession = require('cookie-session');
 const express = require('express');
 const app = express();
 const PORT = 8080; // default port 8080
-const { getUserByEmail } = require('./helper');
-const { generateRandomString } = require('./helper');
-const { urlsForUser } = require('./helper');
+const { getUserByEmail, generateRandomString, urlsForUser } = require('./helper');
+
 
 
 // Set ejs as the view engine
@@ -29,7 +28,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // To render the registration page
 app.get('/register', (req, res) => {
   const user = users[req.session["user_id"]];
-  if (user){
+  if (user) {
     res.redirect('/urls')
   }
   res.render('urls_registration', { user: user });
@@ -186,11 +185,6 @@ app.get('/hello', (req, res) => {
   res.send('<html><body>Hello <b>World</b></body></html>\n');
 });
 
-// To indicate that the server is running on the port
-app.listen(PORT, () => {
-  console.log(`Tiny app is ready to listen on port ${PORT}!`);
-});
-
 // To delete a shortUrl by Id
 app.post('/urls/:shortURL/delete', (req, res) => {
   const user = users[req.session["user_id"]];
@@ -206,4 +200,10 @@ app.post('/urls/:shortURL/delete', (req, res) => {
     res.status(401).send("Cannot delete this URL");
     return;
   }
+});
+
+
+// To indicate that the server is running on the port
+app.listen(PORT, () => {
+  console.log(`Tiny app is ready to listen on port ${PORT}!`);
 });
